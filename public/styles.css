@@ -59,23 +59,6 @@ header p {
   flex: 1;
 }
 
-.form-section {
-  transition: opacity 0.3s ease-in-out;
-}
-
-.form-section.hidden {
-  display: none;
-}
-
-.success-section {
-  transition: opacity 0.3s ease-in-out;
-  width: 100%;
-}
-
-.success-section.hidden {
-  display: none;
-}
-
 #reportForm {
   display: flex;
   flex-direction: column;
@@ -229,24 +212,6 @@ header p {
 
 .message.hidden {
   display: none !important;
-}
-
-.success-content {
-  padding: 30px 20px;
-  display: block;
-  width: 100%;
-}
-
-.success-content h3 {
-  color: var(--success-color);
-  margin-bottom: 15px;
-  font-size: 1.8em;
-  text-align: center;
-}
-
-.success-content p {
-  margin-bottom: 15px;
-  color: #333;
 }
 
 .report-summary {
