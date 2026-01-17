@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emergency Reporting System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚨 Emergency Reporting System</h1>
+      <p>Report emergencies, disasters, and hazards</p>
+    </header>
+
+    <div class="content">
+      <form id="reportForm" enctype="multipart/form-data">
+        
+        <!-- Event Type -->
+        <div class="form-group">
+          <label for="eventType">Event Type *</label>
+          <select id="eventType" name="eventType" required>
+            <option value="">-- Select Event Type --</option>
+            <option value="earthquake">Earthquake</option>
+            <option value="flood">Flood</option>
+            <option value="hurricane">Hurricane/Cyclone</option>
+            <option value="tornado">Tornado</option>
+            <option value="wildfire">Wildfire</option>
+            <option value="landslide">Landslide</option>
+            <option value="tsunami">Tsunami</option>
+            <option value="volcanic">Volcanic Eruption</option>
+            <option value="chemical">Chemical/Industrial Hazard</option>
+            <option value="accident">Major Accident</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Event Description *</label>
+          <textarea id="description" name="description" placeholder="Describe the emergency situation..." required></textarea>
+        </div>
+
+        <!-- GPS Location -->
+        <div class="form-group">
+          <label>GPS Location *</label>
+          <div class="location-inputs">
+            <div class="input-row">
+              <input 
+                type="number" 
+                id="latitude" 
+                name="latitude" 
+                placeholder="Latitude" 
+                step="0.000001"
+                required
+              >
+              <input 
+                type="number" 
+                id="longitude" 
+                name="longitude" 
+                placeholder="Longitude" 
+                step="0.000001"
+                required
+              >
+            </div>
+            <button type="button" id="getLocationBtn" class="btn-secondary">📍 Get My Location</button>
+            <div id="locationStatus" class="location-status"></div>
+          </div>
+        </div>
+
+        <!-- Picture Upload -->
+        <div class="form-group">
+          <label for="picture">Picture of Event</label>
+          <input type="file" id="picture" name="picture" accept="image/*">
+          <small>Accepted formats: JPG, PNG, GIF, WebP (Max 10MB)</small>
+          <div id="previewContainer" class="preview-container"></div>
+        </div>
+
+        <!-- Date & Time -->
+        <div class="form-group">
+          <label for="datetime">Date & Time of Event *</label>
+          <input type="datetime-local" id="datetime" name="datetime" required>
+        </div>
+
+        <!-- Reporter Email -->
+        <div class="form-group">
+          <label for="email">Your Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit">Submit Emergency Report</button>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="message success hidden"></div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="message error hidden"></div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="loading hidden">
+          <div class="spinner"></div>
+          <p>Submitting report...</p>
+        </div>
+      </form>
+    </div>
+
+    <footer>
+      <p>This system immediately notifies the Ministry of Disaster Management.</p>
+      <p>In life-threatening situations, also call emergency services: <strong>911</strong></p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
