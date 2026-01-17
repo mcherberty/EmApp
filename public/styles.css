@@ -69,6 +69,7 @@ header p {
 
 .success-section {
   transition: opacity 0.3s ease-in-out;
+  width: 100%;
 }
 
 .success-section.hidden {
@@ -207,6 +208,7 @@ header p {
   border-radius: 4px;
   font-weight: 500;
   display: none;
+  min-height: auto;
 }
 
 .message.success {
@@ -214,6 +216,7 @@ header p {
   color: var(--success-color);
   border: 1px solid #a5d6a7;
   display: block;
+  min-height: auto;
 }
 
 .message.error {
@@ -221,6 +224,7 @@ header p {
   color: var(--primary-color);
   border: 1px solid #ef9a9a;
   display: block;
+  min-height: auto;
 }
 
 .message.hidden {
@@ -228,13 +232,16 @@ header p {
 }
 
 .success-content {
-  padding: 20px 0;
+  padding: 30px 20px;
+  display: block;
+  width: 100%;
 }
 
 .success-content h3 {
   color: var(--success-color);
-  margin-bottom: 10px;
-  font-size: 1.5em;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  text-align: center;
 }
 
 .success-content p {

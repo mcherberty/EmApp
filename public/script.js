@@ -131,6 +131,8 @@ async function submitReport(event) {
       // Success - Show detailed summary and hide form
       loading.classList.add('hidden');
       
+      console.log('Report submitted successfully');
+      
       // Get form values for summary
       const eventType = formData.get('eventType');
       const description = formData.get('description');
@@ -160,39 +162,50 @@ async function submitReport(event) {
       `;
       
       successMsg.innerHTML = summaryHTML;
+      console.log('Success message HTML set');
       
       // Hide form and show success section
       const formSection = document.getElementById('formSection');
       const successSection = document.getElementById('successSection');
       
+      console.log('Form section:', formSection);
+      console.log('Success section:', successSection);
+      
       if (formSection) {
         formSection.classList.add('hidden');
+        console.log('Form section hidden');
       }
       if (successSection) {
         successSection.classList.remove('hidden');
+        console.log('Success section shown');
       }
       
       // Add click handler for new report button
-      successMsg.querySelector('.btn-new-report').addEventListener('click', () => {
-        // Reset form
-        form.reset();
-        document.getElementById('previewContainer').innerHTML = '';
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById('datetime').value = now.toISOString().slice(0, 16);
-        document.getElementById('locationStatus').classList.add('hidden');
-        
-        // Show form and hide success section
-        if (formSection) {
-          formSection.classList.remove('hidden');
-        }
-        if (successSection) {
-          successSection.classList.add('hidden');
-        }
-        
-        // Scroll to top
-        window.scrollTo(0, 0);
-      });
+      const newReportBtn = successMsg.querySelector('.btn-new-report');
+      console.log('New report button:', newReportBtn);
+      
+      if (newReportBtn) {
+        newReportBtn.addEventListener('click', () => {
+          // Reset form
+          form.reset();
+          document.getElementById('previewContainer').innerHTML = '';
+          const now = new Date();
+          now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+          document.getElementById('datetime').value = now.toISOString().slice(0, 16);
+          document.getElementById('locationStatus').classList.add('hidden');
+          
+          // Show form and hide success section
+          if (formSection) {
+            formSection.classList.remove('hidden');
+          }
+          if (successSection) {
+            successSection.classList.add('hidden');
+          }
+          
+          // Scroll to top
+          window.scrollTo(0, 0);
+        });
+      }
     } else {
       // Error
       loading.classList.add('hidden');
