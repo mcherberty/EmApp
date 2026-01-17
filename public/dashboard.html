@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ministry Emergency Reports Dashboard</title>
+  <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <div class="header-content">
+        <h1>🛡️ Ministry Dashboard</h1>
+        <p>Emergency Reports Management System</p>
+      </div>
+      <nav class="header-nav">
+        <a href="/" class="nav-link">Report Emergency</a>
+        <a href="/dashboard" class="nav-link active">Dashboard</a>
+      </nav>
+    </header>
+
+    <main class="dashboard-main">
+      <!-- Stats Section -->
+      <section class="stats-section">
+        <div class="stat-card">
+          <div class="stat-number" id="totalReports">0</div>
+          <div class="stat-label">Total Reports</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="todayReports">0</div>
+          <div class="stat-label">Today's Reports</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="thisWeekReports">0</div>
+          <div class="stat-label">This Week's Reports</div>
+        </div>
+      </section>
+
+      <!-- Filters Section -->
+      <section class="filters-section">
+        <div class="filter-group">
+          <label for="eventTypeFilter">Event Type:</label>
+          <select id="eventTypeFilter">
+            <option value="">All Types</option>
+            <option value="earthquake">Earthquake</option>
+            <option value="flood">Flood</option>
+            <option value="hurricane">Hurricane/Cyclone</option>
+            <option value="tornado">Tornado</option>
+            <option value="wildfire">Wildfire</option>
+            <option value="landslide">Landslide</option>
+            <option value="tsunami">Tsunami</option>
+            <option value="volcanic">Volcanic Eruption</option>
+            <option value="chemical">Chemical/Industrial Hazard</option>
+            <option value="accident">Major Accident</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="searchFilter">Search:</label>
+          <input type="text" id="searchFilter" placeholder="Search description or email...">
+        </div>
+        <button id="refreshBtn" class="btn-refresh">🔄 Refresh</button>
+        <button id="exportBtn" class="btn-export">📥 Export CSV</button>
+      </section>
+
+      <!-- Reports Table -->
+      <section class="reports-section">
+        <div id="loadingMessage" class="loading-message hidden">
+          <div class="spinner"></div>
+          <p>Loading reports...</p>
+        </div>
+        
+        <div id="emptyMessage" class="empty-message hidden">
+          <p>No reports found.</p>
+        </div>
+
+        <div id="reportsContainer" class="reports-container">
+          <!-- Reports will be inserted here -->
+        </div>
+      </section>
+    </main>
+
+    <footer class="dashboard-footer">
+      <p>&copy; 2026 Ministry of Disaster Management. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Map Modal -->
+  <div id="mapModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Report Location</h2>
+        <button class="modal-close" id="closeMapBtn">&times;</button>
+      </div>
+      <div id="mapContainer" style="width: 100%; height: 400px;"></div>
+      <div id="mapInfo" class="map-info"></div>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal hidden">
+    <div class="modal-content modal-image-content">
+      <div class="modal-header">
+        <h2>Event Image</h2>
+        <button class="modal-close" id="closeImageBtn">&times;</button>
+      </div>
+      <img id="modalImage" src="" alt="Event image">
+    </div>
+  </div>
+
+  <script src="https://leaflet.js.org/download.html"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

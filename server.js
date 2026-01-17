@@ -69,6 +69,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Dashboard route
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
 // Submit emergency report
 app.post('/api/submit-report', upload.single('picture'), async (req, res) => {
   try {
@@ -165,11 +170,17 @@ app.post('/api/submit-report', upload.single('picture'), async (req, res) => {
       html: reporterEmailContent
     };
 
-    // Send both emails
-    await Promise.all([
-      transporter.sendMail(ministryMailOptions),
-      transporter.sendMail(reporterMailOptions)
-    ]);
+    // Send both emails (don't block if email fails)
+    Promise.all([
+      transporter.sendMail(ministryMailOptions).catch(err => {
+        console.error('Ministry email failed:', err);
+      }),
+      transporter.sendMail(reporterMailOptions).catch(err => {
+        console.error('Reporter email failed:', err);
+      })
+    ]).catch(err => {
+      console.error('Email sending error:', err);
+    });
 
     res.json({
       success: true,
@@ -190,6 +201,42 @@ app.post('/api/submit-report', upload.single('picture'), async (req, res) => {
 app.post('/api/get-location', (req, res) => {
   // This endpoint can be used to log location requests
   res.json({ success: true, message: 'Location endpoint ready' });
+});
+
+// Get all reports (for ministry dashboard)
+app.get('/api/reports', (req, res) => {
+  try {
+    const reportsDir = path.join(__dirname, 'reports');
+    
+    if (!fs.existsSync(reportsDir)) {
+      return res.json({ success: true, reports: [] });
+    }
+    
+    const files = fs.readdirSync(reportsDir);
+    const reports = [];
+    
+    files.forEach(file => {
+      if (file.endsWith('.json')) {
+        try {
+          const filePath = path.join(reportsDir, file);
+          const content = fs.readFileSync(filePath, 'utf8');
+          const report = JSON.parse(content);
+          report.id = file.replace('.json', '').replace('report-', '');
+          reports.push(report);
+        } catch (err) {
+          console.error(`Error reading report file ${file}:`, err);
+        }
+      }
+    });
+    
+    // Sort by most recent first
+    reports.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+    
+    res.json({ success: true, reports });
+  } catch (error) {
+    console.error('Error fetching reports:', error);
+    res.status(500).json({ error: 'Failed to fetch reports', details: error.message });
+  }
 });
 
 // Health check
