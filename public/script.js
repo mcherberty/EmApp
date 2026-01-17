@@ -99,12 +99,10 @@ async function submitReport(event) {
   const form = document.getElementById('reportForm');
   const formData = new FormData(form);
   const loading = document.getElementById('loading');
-  const successMsg = document.getElementById('successMessage');
   const errorMsg = document.getElementById('errorMessage');
   const submitBtn = form.querySelector('button[type="submit"]');
 
-  // Clear previous messages
-  successMsg.classList.add('hidden');
+  // Clear previous error messages
   errorMsg.classList.add('hidden');
 
   // Validate required fields

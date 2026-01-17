@@ -179,16 +179,21 @@ app.post('/api/submit-report', upload.single('picture'), async (req, res) => {
     };
 
     // Send both emails (don't block if email fails)
-    Promise.all([
-      transporter.sendMail(ministryMailOptions).catch(err => {
-        console.error('Ministry email failed:', err);
-      }),
-      transporter.sendMail(reporterMailOptions).catch(err => {
-        console.error('Reporter email failed:', err);
-      })
-    ]).catch(err => {
-      console.error('Email sending error:', err);
-    });
+    try {
+      await transporter.sendMail(ministryMailOptions).catch(err => {
+        console.error('Ministry email failed (non-blocking):', err.message);
+      });
+    } catch (err) {
+      console.error('Ministry email error:', err.message);
+    }
+
+    try {
+      await transporter.sendMail(reporterMailOptions).catch(err => {
+        console.error('Reporter email failed (non-blocking):', err.message);
+      });
+    } catch (err) {
+      console.error('Reporter email error:', err.message);
+    }
 
     res.json({
       success: true,
