@@ -14,6 +14,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -92,7 +93,9 @@ app.post('/api/submit-report', upload.single('picture'), async (req, res) => {
     }
 
     // Get file path if picture was uploaded
-    const picturePath = req.file ? req.file.path : null;
+    // Store relative path that can be accessed via HTTP
+    const pictureFilename = req.file ? req.file.filename : null;
+    const picturePath = req.file ? `/uploads/${req.file.filename}` : null;
 
     // Create report object
     const report = {
@@ -141,9 +144,9 @@ app.post('/api/submit-report', upload.single('picture'), async (req, res) => {
       to: ministryEmail,
       subject: `Emergency Report: ${eventType}`,
       html: ministryEmailContent,
-      attachments: picturePath ? [{
-        filename: path.basename(picturePath),
-        path: picturePath
+      attachments: req.file ? [{
+        filename: req.file.filename,
+        path: req.file.path
       }] : []
     };
 

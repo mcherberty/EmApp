@@ -197,16 +197,18 @@ header p {
   background: #c8e6c9;
   color: var(--success-color);
   border: 1px solid #a5d6a7;
+  display: block;
 }
 
 .message.error {
   background: #ffcdd2;
   color: var(--primary-color);
   border: 1px solid #ef9a9a;
+  display: block;
 }
 
 .message.hidden {
-  display: none;
+  display: none !important;
 }
 
 .success-content {
@@ -283,14 +285,8 @@ header p {
   background: #2e7d32;
 }
 
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: 30px;
-  text-align: center;
+.loading.hidden {
+  display: none;
 }
 
 .loading.hidden {
