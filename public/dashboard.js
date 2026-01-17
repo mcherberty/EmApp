@@ -4,17 +4,59 @@ let map = null;
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Dashboard initializing...');
+  
+  // Check if elements exist
+  const loadingMsg = document.getElementById('loadingMessage');
+  const emptyMsg = document.getElementById('emptyMessage');
+  const container = document.getElementById('reportsContainer');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const exportBtn = document.getElementById('exportBtn');
+  const typeFilter = document.getElementById('eventTypeFilter');
+  const searchFilter = document.getElementById('searchFilter');
+  const closeMapBtn = document.getElementById('closeMapBtn');
+  const closeImageBtn = document.getElementById('closeImageBtn');
+  const mapModal = document.getElementById('mapModal');
+  const imageModal = document.getElementById('imageModal');
+  
+  console.log('Elements found:', {
+    loadingMsg: !!loadingMsg,
+    emptyMsg: !!emptyMsg,
+    container: !!container,
+    refreshBtn: !!refreshBtn,
+    exportBtn: !!exportBtn,
+    typeFilter: !!typeFilter,
+    searchFilter: !!searchFilter,
+    closeMapBtn: !!closeMapBtn,
+    closeImageBtn: !!closeImageBtn
+  });
+  
   loadReports();
   
   // Event listeners
-  document.getElementById('refreshBtn').addEventListener('click', loadReports);
-  document.getElementById('exportBtn').addEventListener('click', exportToCSV);
-  document.getElementById('eventTypeFilter').addEventListener('change', filterReports);
-  document.getElementById('searchFilter').addEventListener('keyup', filterReports);
+  if (refreshBtn) refreshBtn.addEventListener('click', loadReports);
+  if (exportBtn) exportBtn.addEventListener('click', exportToCSV);
+  if (typeFilter) typeFilter.addEventListener('change', filterReports);
+  if (searchFilter) searchFilter.addEventListener('keyup', filterReports);
+  if (closeMapBtn) closeMapBtn.addEventListener('click', closeMapModal);
+  if (closeImageBtn) closeImageBtn.addEventListener('click', closeImageModal);
   
-  // Modal close buttons
-  document.getElementById('closeMapBtn').addEventListener('click', closeMapModal);
-  document.getElementById('closeImageBtn').addEventListener('click', closeImageModal);
+  // Close modal when clicking outside
+  if (mapModal) {
+    mapModal.addEventListener('click', (e) => {
+      if (e.target === mapModal) {
+        closeMapModal();
+      }
+    });
+  }
+  
+  if (imageModal) {
+    imageModal.addEventListener('click', (e) => {
+      if (e.target === imageModal) {
+        closeImageModal();
+      }
+    });
+  }
 });
 
 async function loadReports() {
@@ -22,32 +64,45 @@ async function loadReports() {
   const emptyMsg = document.getElementById('emptyMessage');
   const container = document.getElementById('reportsContainer');
   
-  loadingMsg.classList.remove('hidden');
-  emptyMsg.classList.add('hidden');
-  container.innerHTML = '';
+  console.log('Loading reports...');
+  
+  if (loadingMsg) loadingMsg.classList.remove('hidden');
+  if (emptyMsg) emptyMsg.classList.add('hidden');
+  if (container) container.innerHTML = '';
   
   try {
     const response = await fetch('/api/reports');
+    console.log('API Response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const data = await response.json();
+    console.log('API Response data:', data);
     
     if (data.success) {
       allReports = data.reports;
       filteredReports = allReports;
       
+      console.log('Reports loaded:', allReports.length);
+      
       updateStats();
       renderReports();
       
       if (allReports.length === 0) {
-        emptyMsg.classList.remove('hidden');
+        if (emptyMsg) {
+          emptyMsg.classList.remove('hidden');
+        }
       }
     } else {
-      showError('Failed to load reports');
+      showError('Failed to load reports - No success response from API');
     }
   } catch (error) {
     console.error('Error loading reports:', error);
-    showError('Network error: Unable to load reports');
+    showError('Network error: ' + error.message);
   } finally {
-    loadingMsg.classList.add('hidden');
+    if (loadingMsg) loadingMsg.classList.add('hidden');
   }
 }
 
@@ -218,7 +273,10 @@ function showImageModal(report) {
 }
 
 function closeMapModal() {
-  document.getElementById('mapModal').classList.add('hidden');
+  const modal = document.getElementById('mapModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
   if (map) {
     map.remove();
     map = null;
@@ -226,7 +284,10 @@ function closeMapModal() {
 }
 
 function closeImageModal() {
-  document.getElementById('imageModal').classList.add('hidden');
+  const modal = document.getElementById('imageModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
 }
 
 function exportToCSV() {
@@ -288,8 +349,11 @@ function escapeHtml(text) {
 }
 
 function showError(message) {
-  console.error(message);
-  const emptyMsg = document.getElementById('emptyMessage');
-  emptyMsg.querySelector('p').textContent = '⚠️ ' + message;
-  emptyMsg.classList.remove('hidden');
+  console.error('Dashboard Error:', message);
+  const container = document.getElementById('reportsContainer');
+  if (container) {
+    container.innerHTML = `<div class="error-message" style="background: #ffcdd2; color: #c62828; padding: 20px; border-radius: 8px; border-left: 4px solid #c62828;">
+      <p><strong>Error:</strong> ${escapeHtml(message)}</p>
+    </div>`;
+  }
 }

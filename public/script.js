@@ -128,20 +128,51 @@ async function submitReport(event) {
     const data = await response.json();
 
     if (response.ok) {
-      // Success
+      // Success - Show detailed summary
       loading.classList.add('hidden');
-      successMsg.textContent = '✓ ' + data.message;
+      
+      // Get form values for summary
+      const eventType = formData.get('eventType');
+      const description = formData.get('description');
+      const latitude = formData.get('latitude');
+      const longitude = formData.get('longitude');
+      const datetime = formData.get('datetime');
+      const email = formData.get('email');
+      
+      // Create detailed success message with report summary
+      const summaryHTML = `
+        <div class="success-content">
+          <h3>✓ Report Submitted Successfully!</h3>
+          <p>${data.message}</p>
+          <div class="report-summary">
+            <h4>Report Summary:</h4>
+            <ul>
+              <li><strong>Event Type:</strong> ${escapeHtml(eventType)}</li>
+              <li><strong>Description:</strong> ${escapeHtml(description)}</li>
+              <li><strong>Location:</strong> ${latitude}, ${longitude}</li>
+              <li><strong>Date & Time:</strong> ${new Date(datetime).toLocaleString()}</li>
+              <li><strong>Reporter Email:</strong> ${escapeHtml(email)}</li>
+            </ul>
+          </div>
+          <p class="thank-you">Thank you for reporting this emergency. The Ministry of Disaster Management has been notified.</p>
+          <button type="button" class="btn-new-report">📝 Submit Another Report</button>
+        </div>
+      `;
+      
+      successMsg.innerHTML = summaryHTML;
       successMsg.classList.remove('hidden');
       
-      // Reset form
-      form.reset();
-      document.getElementById('previewContainer').innerHTML = '';
-      const now = new Date();
-      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      document.getElementById('datetime').value = now.toISOString().slice(0, 16);
-      
-      // Clear location status
-      document.getElementById('locationStatus').classList.add('hidden');
+      // Add click handler for new report button
+      successMsg.querySelector('.btn-new-report').addEventListener('click', () => {
+        successMsg.classList.add('hidden');
+        form.reset();
+        document.getElementById('previewContainer').innerHTML = '';
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('datetime').value = now.toISOString().slice(0, 16);
+        document.getElementById('locationStatus').classList.add('hidden');
+        window.scrollTo(0, 0);
+      });
     } else {
       // Error
       loading.classList.add('hidden');
@@ -159,4 +190,10 @@ async function submitReport(event) {
 function showError(element, message) {
   element.textContent = '⚠ ' + message;
   element.classList.remove('hidden');
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
