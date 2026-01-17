@@ -59,6 +59,22 @@ header p {
   flex: 1;
 }
 
+.form-section {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.form-section.hidden {
+  display: none;
+}
+
+.success-section {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.success-section.hidden {
+  display: none;
+}
+
 #reportForm {
   display: flex;
   flex-direction: column;

@@ -128,7 +128,7 @@ async function submitReport(event) {
     const data = await response.json();
 
     if (response.ok) {
-      // Success - Show detailed summary
+      // Success - Show detailed summary and hide form
       loading.classList.add('hidden');
       
       // Get form values for summary
@@ -160,17 +160,37 @@ async function submitReport(event) {
       `;
       
       successMsg.innerHTML = summaryHTML;
-      successMsg.classList.remove('hidden');
+      
+      // Hide form and show success section
+      const formSection = document.getElementById('formSection');
+      const successSection = document.getElementById('successSection');
+      
+      if (formSection) {
+        formSection.classList.add('hidden');
+      }
+      if (successSection) {
+        successSection.classList.remove('hidden');
+      }
       
       // Add click handler for new report button
       successMsg.querySelector('.btn-new-report').addEventListener('click', () => {
-        successMsg.classList.add('hidden');
+        // Reset form
         form.reset();
         document.getElementById('previewContainer').innerHTML = '';
         const now = new Date();
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         document.getElementById('datetime').value = now.toISOString().slice(0, 16);
         document.getElementById('locationStatus').classList.add('hidden');
+        
+        // Show form and hide success section
+        if (formSection) {
+          formSection.classList.remove('hidden');
+        }
+        if (successSection) {
+          successSection.classList.add('hidden');
+        }
+        
+        // Scroll to top
         window.scrollTo(0, 0);
       });
     } else {
