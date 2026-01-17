@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Test</title>
+</head>
+<body>
+  <h1>Form Submission Test</h1>
+  <form id="testForm" enctype="multipart/form-data">
+    <input type="hidden" name="eventType" value="flood">
+    <input type="hidden" name="description" value="Test flood">
+    <input type="hidden" name="latitude" value="40.7128">
+    <input type="hidden" name="longitude" value="-74.0060">
+    <input type="hidden" name="datetime" value="2026-01-17T10:30:00">
+    <input type="hidden" name="email" value="test@example.com">
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById('testForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Form submitted');
+      
+      const formData = new FormData(document.getElementById('testForm'));
+      
+      try {
+        const response = await fetch('/api/submit-report', {
+          method: 'POST',
+          body: formData
+        });
+        
+        console.log('Response status:', response.status);
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        if (response.ok) {
+          console.log('Success! Redirecting...');
+          window.location.href = '/success';
+        } else {
+          console.log('Error:', data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>

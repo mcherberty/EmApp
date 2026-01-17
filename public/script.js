@@ -1,18 +1,28 @@
-// Set current datetime to now
+// Set current datetime to now and attach event listeners
 document.addEventListener('DOMContentLoaded', () => {
   const now = new Date();
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
   document.getElementById('datetime').value = now.toISOString().slice(0, 16);
+
+  // Get location button
+  const getLocationBtn = document.getElementById('getLocationBtn');
+  if (getLocationBtn) {
+    getLocationBtn.addEventListener('click', getLocation);
+  }
+
+  // File preview
+  const pictureInput = document.getElementById('picture');
+  if (pictureInput) {
+    pictureInput.addEventListener('change', previewImage);
+  }
+
+  // Form submission
+  const reportForm = document.getElementById('reportForm');
+  if (reportForm) {
+    reportForm.addEventListener('submit', submitReport);
+    console.log('Form submission handler attached');
+  }
 });
-
-// Get location button
-document.getElementById('getLocationBtn').addEventListener('click', getLocation);
-
-// File preview
-document.getElementById('picture').addEventListener('change', previewImage);
-
-// Form submission
-document.getElementById('reportForm').addEventListener('submit', submitReport);
 
 function getLocation() {
   const locationStatus = document.getElementById('locationStatus');
